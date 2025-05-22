@@ -1,6 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vehicle_rental_app/providers/auth_provider.dart';
+import 'package:vehicle_rental_app/services/auth_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -10,6 +11,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -31,25 +33,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
       });
 
       try {
-        await Provider.of<AuthProvider>(
+        User? user = await _auth.signUpWithEmailAndPassword(
+          _emailController.text.trim(),
+          _passwordController.text,
+        );
+
+        Navigator.pushReplacementNamed(context, '/login');
+        ScaffoldMessenger.of(
           context,
-          listen: false,
-        ).signUp(_emailController.text.trim(), _passwordController.text.trim());
-        if (mounted) {
-          Navigator.pop(context);
-        }
+        ).showSnackBar(SnackBar(content: Text('Successfully signed up!')));
       } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(e.toString())));
-        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Signing up failed: ${e.toString()}')),
+        );
       } finally {
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
-        }
+        setState(() => _isLoading = false);
       }
     }
   }

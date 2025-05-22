@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
-class AuthProvider with ChangeNotifier {
+class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Stream<User?> get authStateChanges => _auth.authStateChanges();
@@ -9,7 +8,10 @@ class AuthProvider with ChangeNotifier {
   // Get current user
   User? get currentUser => _auth.currentUser;
 
-  Future<User?> signUp(String email, String password) async {
+  Future<User?> signUpWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
     try {
       // Create user with email/password
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
@@ -24,7 +26,10 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<User?> signIn(String email, String password) async {
+  Future<User?> signInWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
     try {
       UserCredential credential = await _auth.signInWithEmailAndPassword(
         email: email,

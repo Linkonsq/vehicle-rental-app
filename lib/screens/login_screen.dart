@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vehicle_rental_app/providers/auth_provider.dart';
 import 'package:vehicle_rental_app/screens/register_screen.dart';
+import 'package:vehicle_rental_app/screens/vehicle_list_screen.dart';
+import 'package:vehicle_rental_app/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,6 +13,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -30,22 +33,21 @@ class _LoginScreenState extends State<LoginScreen> {
       });
 
       try {
-        await Provider.of<AuthProvider>(
-          context,
-          listen: false,
-        ).signIn(_emailController.text.trim(), _passwordController.text.trim());
+        User? user = await _auth.signInWithEmailAndPassword(
+          _emailController.text.trim(),
+          _passwordController.text.trim(),
+        );
+
+        if (user != null) {
+          Navigator.pushReplacementNamed(context, '/home');
+        }
       } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(e.toString())));
-        }
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(
+            SnackBar(content: Text('Login failed: ${e.toString()}')));
       } finally {
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
-        }
+        setState(() => _isLoading = false);
       }
     }
   }
