@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vehicle_rental_app/providers/vehicle_provider.dart';
 import 'package:vehicle_rental_app/screens/vehicle_details_screen.dart';
+import 'package:vehicle_rental_app/services/auth_service.dart';
 
 class VehicleListScreen extends StatefulWidget {
   const VehicleListScreen({super.key});
@@ -11,6 +12,8 @@ class VehicleListScreen extends StatefulWidget {
 }
 
 class _VehicleListScreenState extends State<VehicleListScreen> {
+  final AuthService _auth = AuthService();
+
   @override
   void initState() {
     super.initState();
@@ -20,11 +23,65 @@ class _VehicleListScreenState extends State<VehicleListScreen> {
     );
   }
 
+  Future<void> _signOut() async {
+    try {
+      _auth.signOut();
+
+      if (mounted) {
+        Navigator.of(context).pushReplacementNamed('/login');
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error signing out: $e')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Available Vehicles'),
+        actions: [
+          PopupMenuButton<String>(
+            icon: const CircleAvatar(
+              backgroundImage: AssetImage('assets/images/profile.png'),
+              radius: 16,
+            ),
+            onSelected: (value) {
+              if (value == 'profile') {
+                // Navigator.pushNamed(context, '/profile');
+              } else if (value == 'logout') {
+                _signOut();
+              }
+            },
+            itemBuilder: (BuildContext context) => [
+              const PopupMenuItem<String>(
+                value: 'profile',
+                child: Row(
+                  children: [
+                    Icon(Icons.person_outline),
+                    SizedBox(width: 8),
+                    Text('Profile'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem<String>(
+                value: 'logout',
+                child: Row(
+                  children: [
+                    Icon(Icons.logout),
+                    SizedBox(width: 8),
+                    Text('Logout'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: Consumer<VehicleProvider>(
         builder: (context, vehicleProvider, child) {
