@@ -6,6 +6,7 @@ class Vehicle {
   final int battery;
   final Location location;
   final double costPerMinute;
+  final String imageUrl;
 
   Vehicle({
     required this.id,
@@ -15,6 +16,7 @@ class Vehicle {
     required this.battery,
     required this.location,
     required this.costPerMinute,
+    required this.imageUrl,
   });
 
   factory Vehicle.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class Vehicle {
       battery: json['battery'],
       location: Location.fromJson(json['location'] ?? {}),
       costPerMinute: (json['cost_per_minute'] ?? 0).toDouble(),
+      imageUrl: json['image'] ?? '',
     );
   }
 }
@@ -37,6 +40,9 @@ class Location {
   Location({this.lat, this.lng});
 
   factory Location.fromJson(Map<String, dynamic> json) {
-    return Location(lat: json['lat']?.toDouble(), lng: json['lng']?.toDouble());
+    return Location(
+      lat: json['lat']?.toDouble(),
+      lng: json['lng']?.toDouble(),
+    );
   }
 }
