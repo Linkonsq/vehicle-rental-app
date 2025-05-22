@@ -25,12 +25,13 @@ class _VehicleListScreenState extends State<VehicleListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Available Vehicles'),
-        centerTitle: true,
       ),
       body: Consumer<VehicleProvider>(
         builder: (context, vehicleProvider, child) {
           if (vehicleProvider.isLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
 
           if (vehicleProvider.error != null) {
@@ -38,19 +39,27 @@ class _VehicleListScreenState extends State<VehicleListScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                  const Icon(
+                    Icons.error_outline,
+                    size: 64,
+                    color: Colors.red,
+                  ),
                   const SizedBox(height: 16),
                   Text(
                     'Error: ${vehicleProvider.error}',
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.red),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.red,
+                    ),
                   ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
+                  const SizedBox(height: 24),
+                  ElevatedButton.icon(
                     onPressed: () {
                       vehicleProvider.fetchVehicles();
                     },
-                    child: const Text('Retry'),
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Retry'),
                   ),
                 ],
               ),
@@ -58,94 +67,138 @@ class _VehicleListScreenState extends State<VehicleListScreen> {
           }
 
           if (vehicleProvider.vehicles.isEmpty) {
-            return const Center(
-              child: Text(
-                'No vehicles available',
-                style: TextStyle(fontSize: 18),
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.directions_car_outlined,
+                    size: 64,
+                    color: Colors.grey[400],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'No vehicles available',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
               ),
             );
           }
 
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: vehicleProvider.vehicles.length,
-            itemBuilder: (context, index) {
-              final vehicle = vehicleProvider.vehicles[index];
-              return Card(
-                margin: const EdgeInsets.only(bottom: 16),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => VehicleDetailsScreen(
-                          vehicle: vehicle,
-                        ),
-                      ),
-                    );
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (vehicle.imageUrl.isNotEmpty)
-                        ClipRRect(
-                          borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(4),
-                          ),
-                          child: CircleAvatar(
-                            radius: 30,
-                            backgroundImage: NetworkImage(vehicle.imageUrl),
+          return RefreshIndicator(
+            onRefresh: () => vehicleProvider.fetchVehicles(),
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: vehicleProvider.vehicles.length,
+              itemBuilder: (context, index) {
+                final vehicle = vehicleProvider.vehicles[index];
+                final isAvailable = vehicle.status.toLowerCase() == 'available';
+
+                return Card(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => VehicleDetailsScreen(
+                            vehicle: vehicle,
                           ),
                         ),
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    vehicle.name,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                      );
+                    },
+                    borderRadius: BorderRadius.circular(12),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        children: [
+                          if (vehicle.imageUrl.isNotEmpty)
+                            Container(
+                              width: 80,
+                              height: 80,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                image: DecorationImage(
+                                  image: NetworkImage(vehicle.imageUrl),
+                                  fit: BoxFit.cover,
                                 ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 6,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: vehicle.status.toLowerCase() ==
-                                            'available'
-                                        ? Colors.green
-                                        : Colors.red,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Text(
-                                    vehicle.status,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          else
+                            Container(
+                              width: 80,
+                              height: 80,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Icon(
+                                Icons.directions_car,
+                                size: 40,
+                                color: Colors.grey[400],
+                              ),
+                            ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        vehicle.name,
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                     ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: isAvailable
+                                            ? Colors.green.withOpacity(0.1)
+                                            : Colors.red.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text(
+                                        vehicle.status,
+                                        style: TextStyle(
+                                          color: isAvailable
+                                              ? Colors.green
+                                              : Colors.red,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  vehicle.type,
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontSize: 16,
                                   ),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 8),
-                            Text('Type: ${vehicle.type}'),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           );
         },
       ),
