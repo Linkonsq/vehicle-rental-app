@@ -6,7 +6,9 @@ import 'package:vehicle_rental_app/screens/register_screen.dart';
 import 'package:vehicle_rental_app/screens/vehicle_list_screen.dart';
 import 'package:vehicle_rental_app/services/auth_service.dart';
 import 'providers/vehicle_provider.dart';
+import 'providers/user_profile_provider.dart';
 import 'screens/login_screen.dart';
+import 'screens/profile_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +24,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => VehicleProvider()),
+        ChangeNotifierProvider(create: (_) => UserProfileProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -85,6 +88,7 @@ class MyApp extends StatelessWidget {
           '/login': (context) => const LoginScreen(),
           '/register': (context) => const RegisterScreen(),
           '/home': (context) => const VehicleListScreen(),
+          '/profile': (context) => const ProfileScreen(),
         },
       ),
     );

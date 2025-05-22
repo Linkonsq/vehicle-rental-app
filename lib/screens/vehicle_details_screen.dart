@@ -241,8 +241,6 @@ class VehicleDetailsScreen extends StatelessWidget {
     }
 
     try {
-      // TODO: Implement the actual rental start API call
-      // For now, just show a success message
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Rental started successfully!'),

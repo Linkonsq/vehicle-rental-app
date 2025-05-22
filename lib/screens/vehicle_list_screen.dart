@@ -44,6 +44,7 @@ class _VehicleListScreenState extends State<VehicleListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Available Vehicles'),
+        //backgroundColor: Theme.of(context).primaryColor,
         actions: [
           PopupMenuButton<String>(
             icon: const CircleAvatar(
@@ -52,7 +53,7 @@ class _VehicleListScreenState extends State<VehicleListScreen> {
             ),
             onSelected: (value) {
               if (value == 'profile') {
-                // Navigator.pushNamed(context, '/profile');
+                Navigator.pushNamed(context, '/profile');
               } else if (value == 'logout') {
                 _signOut();
               }
