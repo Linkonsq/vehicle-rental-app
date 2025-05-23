@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vehicle_rental_app/screens/register_screen.dart';
+import 'package:vehicle_rental_app/screens/vehicle_list_screen.dart';
 import 'package:vehicle_rental_app/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -37,7 +38,11 @@ class _LoginScreenState extends State<LoginScreen> {
         );
 
         if (user != null) {
-          Navigator.pushReplacementNamed(context, '/home');
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const VehicleListScreen()),
+            (route) => false,
+          );
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
