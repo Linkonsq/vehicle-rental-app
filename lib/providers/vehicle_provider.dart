@@ -35,6 +35,7 @@ class VehicleProvider extends ChangeNotifier {
       }
     } catch (e) {
       _error = 'Failed to connect to the server';
+      await loadCachedVehicles();
     } finally {
       _isLoading = false;
       notifyListeners();
