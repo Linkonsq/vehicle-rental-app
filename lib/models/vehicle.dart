@@ -31,6 +31,19 @@ class Vehicle {
       imageUrl: json['image'] ?? '',
     );
   }
+
+  // Map<String, dynamic> toJson() {
+  //   return {
+  //     'id': id,
+  //     'name': name,
+  //     'type': type,
+  //     'status': status,
+  //     'battery': battery,
+  //     'location': location.toJson(),
+  //     'cost_per_minute': costPerMinute,
+  //     'image': imageUrl,
+  //   };
+  // }
 }
 
 class Location {
@@ -45,4 +58,11 @@ class Location {
       lng: json['lng']?.toDouble(),
     );
   }
+
+  // Map<String, dynamic> toJson() {
+  //   return {
+  //     'lat': lat,
+  //     'lng': lng,
+  //   };
+  // }
 }

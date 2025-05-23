@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:vehicle_rental_app/models/vehicle.dart';
+import 'package:vehicle_rental_app/services/connectivity_service.dart';
 
 class VehicleDetailsScreen extends StatelessWidget {
   final Vehicle vehicle;
+  final _connectivityService = ConnectivityService();
 
-  const VehicleDetailsScreen({
+  VehicleDetailsScreen({
     super.key,
     required this.vehicle,
   });
@@ -12,6 +14,7 @@ class VehicleDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isAvailable = vehicle.status.toLowerCase() == 'available';
+    final isConnected = _connectivityService.isConnected;
 
     return Scaffold(
       body: CustomScrollView(
@@ -21,8 +24,12 @@ class VehicleDetailsScreen extends StatelessWidget {
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               background: vehicle.imageUrl.isNotEmpty
-                  ? Image.network(
-                      vehicle.imageUrl,
+                  ? Image(
+                      image: isConnected
+                          ? NetworkImage(vehicle.imageUrl)
+                          : const AssetImage(
+                                  'assets/images/dummy_car_avatar.jpg')
+                              as ImageProvider,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) => Container(
                         color: Colors.grey[300],
@@ -35,10 +42,9 @@ class VehicleDetailsScreen extends StatelessWidget {
                     )
                   : Container(
                       color: Colors.grey[300],
-                      child: Icon(
-                        Icons.directions_car,
-                        size: 80,
-                        color: Colors.grey[400],
+                      child: Image.asset(
+                        'assets/images/dummy_taxi.jpg',
+                        fit: BoxFit.cover,
                       ),
                     ),
             ),
