@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vehicle_rental_app/providers/vehicle_provider.dart';
 import 'package:vehicle_rental_app/screens/vehicle_details_screen.dart';
 import 'package:vehicle_rental_app/services/auth_service.dart';
+import 'package:vehicle_rental_app/services/connectivity_service.dart';
 
 class VehicleListScreen extends StatefulWidget {
   const VehicleListScreen({super.key});
@@ -13,10 +14,19 @@ class VehicleListScreen extends StatefulWidget {
 
 class _VehicleListScreenState extends State<VehicleListScreen> {
   final AuthService _auth = AuthService();
+  final _connectivityService = ConnectivityService();
+  late bool _isConnected;
 
   @override
   void initState() {
     super.initState();
+    _isConnected = _connectivityService.isConnected;
+    _connectivityService.checkConnectivity();
+    _connectivityService.setupConnectivityListener();
+    _connectivityService.connectionStatus.addListener(
+      _onConnectionStatusChanged,
+    );
+
     Future.microtask(
       () =>
           Provider.of<VehicleProvider>(context, listen: false).fetchVehicles(),
@@ -37,6 +47,20 @@ class _VehicleListScreenState extends State<VehicleListScreen> {
         );
       }
     }
+  }
+
+  void _onConnectionStatusChanged() {
+    setState(() {
+      _isConnected = _connectivityService.isConnected;
+    });
+  }
+
+  @override
+  void dispose() {
+    _connectivityService.connectionStatus.removeListener(
+      _onConnectionStatusChanged,
+    );
+    super.dispose();
   }
 
   @override
@@ -118,6 +142,40 @@ class _VehicleListScreenState extends State<VehicleListScreen> {
                     },
                     icon: const Icon(Icons.refresh),
                     label: const Text('Retry'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          // Show offline message when no internet connection
+          if (!_isConnected) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.wifi_off, size: 64, color: Colors.grey),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'No Internet Connection',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Please check your connection and try again',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton.icon(
+                      onPressed: () async {
+                        await _connectivityService.checkConnectivity();
+                        if (_connectivityService.isConnected) {}
+                      },
+                      icon: const Icon(Icons.refresh),
+                      label: const Text('Retry'),
+                    ),
                   ),
                 ],
               ),
