@@ -1,6 +1,6 @@
 # Vehicle Rental App
 
-A Flutter application that fetches and displays Mock vehicle data https://mockapi.io
+A Flutter application that fetches and displays Mock vehicle data from https://mockapi.io
 
 ## **✨ Features** 
 ✔️ Firebase Auth – Email/Password authentication  
