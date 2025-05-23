@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:vehicle_rental_app/screens/register_screen.dart';
+import 'package:vehicle_rental_app/screens/splash_screen.dart';
 import 'package:vehicle_rental_app/screens/vehicle_list_screen.dart';
 import 'package:vehicle_rental_app/services/auth_service.dart';
 import 'providers/vehicle_provider.dart';
@@ -117,7 +118,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
           }
           return const VehicleListScreen();
         }
-        return const LoginScreen();
+        return const SplashScreen();
       },
     );
   }
