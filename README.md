@@ -39,6 +39,9 @@ A Flutter application that fetches and displays Mock vehicle data https://mockap
    flutter pub get
    flutter run
 ```  
+## **🎥 Video Demonstration**  
+https://github.com/user-attachments/assets/55a568b9-dbb6-40a5-a99d-5dd5b57a5529
+
 ## **📸 Screenshots**
 <img src="https://github.com/user-attachments/assets/268d6839-e7ab-4edb-8310-a49d53884e4c" alt="" width="300" />
 <img src="https://github.com/user-attachments/assets/f44bb94e-8f41-461c-b62b-0453d91cb32a" alt="" width="300" />
