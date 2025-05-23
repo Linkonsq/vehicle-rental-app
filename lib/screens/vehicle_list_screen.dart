@@ -272,7 +272,11 @@ class _VehicleListScreenState extends State<VehicleListScreen> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8),
                                       image: DecorationImage(
-                                        image: NetworkImage(vehicle.imageUrl),
+                                        image: _isConnected
+                                            ? NetworkImage(vehicle.imageUrl)
+                                            : const AssetImage(
+                                                'assets/images/dummy_car_avatar.jpg',
+                                              ) as ImageProvider,
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -284,11 +288,11 @@ class _VehicleListScreenState extends State<VehicleListScreen> {
                                     decoration: BoxDecoration(
                                       color: Colors.grey[200],
                                       borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Icon(
-                                      Icons.directions_car,
-                                      size: 40,
-                                      color: Colors.grey[400],
+                                      image: const DecorationImage(
+                                        image: AssetImage(
+                                            'assets/images/dummy_taxi.jpg'),
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
                                 const SizedBox(width: 16),
