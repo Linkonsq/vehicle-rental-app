@@ -4,13 +4,13 @@ A Flutter application that fetches and displays Mock vehicle data https://mockap
 
 ## **✨ Features** 
 ✔️ Firebase Auth – Email/Password authentication
-✔️ Vehicle list                                                   
+✔️ Vehicle list with image                                                  
 ✔️ Vehicle detail screen with comprehensive information    
 ✔️ Pull-to-refresh                              
 ✔️ Error handling for various scenarios  
 ✔️ Responsive UI for all screen sizes  
 ✔️ Offline indicator                                       
-✔️ Local caching for offline support
+✔️ Local caching for offline support                              
 ✔️ App icon and Splash screen
 
 ## Tech Stack
